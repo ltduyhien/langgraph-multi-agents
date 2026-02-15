@@ -1,77 +1,42 @@
 [project]
-# `name` is the package/project identifier used by Python tooling.
-# We keep it aligned with the repository purpose so package metadata stays clear.
 name = "langgraph-multi-agents"
 
-# `version` gives the project an initial semantic version for local builds.
-# We start at `0.1.0` because this is the first scaffold, not a stable release.
 version = "0.1.0"
 
-# `description` is short metadata shown by package tooling and indexes.
-# Its purpose is to describe the service in one sentence.
 description = "A LangGraph-based multi-agent service with Ollama-first provider support."
 
-# `readme` tells build tools which file contains the long-form project overview.
-# This connects packaging metadata to the architecture document we created first.
 readme = "README.md"
 
-# `requires-python` defines the minimum Python version needed at runtime.
-# We choose Python 3.11+ because modern LangGraph and FastAPI stacks work well there.
 requires-python = ">=3.11"
 
-# `dependencies` lists runtime libraries the service will import when the app runs.
-# We leave versions unpinned for now so the scaffold stays simple during early design.
 dependencies = [
-  # `fastapi` will expose the HTTP API that clients call at runtime.
   "fastapi",
-  # `uvicorn` will run the ASGI app process during local development and deployment.
   "uvicorn[standard]",
-  # `langgraph` will orchestrate the multi-agent state graph at runtime.
   "langgraph",
-  # `langchain-core` provides shared message, prompt, and runnable primitives.
   "langchain-core",
-  # `langchain-ollama` gives us the Ollama chat model integration layer.
   "langchain-ollama",
-  # `pydantic-settings` will load environment-based runtime configuration.
   "pydantic-settings",
 ]
 
 [project.optional-dependencies]
-# `dev` groups tools we only need while developing or testing the service.
-# Keeping them optional avoids forcing production installs to include test tooling.
 dev = [
-  # `pytest` will run focused automated tests for the scaffold and request flow.
   "pytest",
-  # `httpx` is useful for API endpoint tests against FastAPI apps.
   "httpx",
-  # `ruff` will provide linting and formatting support for Python source files.
   "ruff",
 ]
 
 [build-system]
-# `requires` defines the packages needed to build this project itself.
-# `setuptools` is the standard build backend for a simple Python service scaffold.
 requires = ["setuptools>=68", "wheel"]
 
-# `build-backend` tells Python which backend implements packaging behavior.
-# We use setuptools because it is conventional, stable, and sufficient here.
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-# `package-dir` says that importable Python packages will live under `src/`.
-# This supports the `src` layout, which helps avoid accidental import confusion.
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
-# `where` tells setuptools where to search for importable Python packages.
-# This connects packaging to the runtime source tree we will create next.
 where = ["src"]
 
 [tool.ruff]
-# `line-length` sets the preferred maximum line width for Python formatting.
-# We use 100 to keep code readable without wrapping too aggressively.
 line-length = 100
 
-# `target-version` tells Ruff which Python syntax rules to assume.
-# It should match the runtime floor declared in `requires-python`.
 target-version = "py311"
