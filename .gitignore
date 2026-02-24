@@ -1,0 +1,31 @@
+# `.env` contains local runtime secrets or machine-specific settings.
+# We keep `.env.example` tracked, but ignore the real file developers create locally.
+.env
+
+# Virtual environment directories are local Python installation artifacts.
+# Ignoring them prevents machine-specific interpreter state from being committed.
+.venv/
+venv/
+env/
+
+# `__pycache__` and `*.pyc` are Python bytecode caches generated at runtime/import time.
+# They are rebuildable artifacts, so they should not live in git history.
+__pycache__/
+*.py[cod]
+
+# `.pytest_cache` stores local test runner cache data.
+# This is useful per machine, but not part of the application source.
+.pytest_cache/
+
+# Coverage outputs are generated during test reporting.
+# They are disposable verification artifacts rather than source files.
+.coverage
+htmlcov/
+
+# Ruff may create local cache data during linting and formatting.
+# That cache speeds up local checks, but should not be tracked.
+.ruff_cache/
+
+# macOS can create Finder metadata files inside project directories.
+# Ignoring them avoids noisy commits unrelated to application code.
+.DS_Store
