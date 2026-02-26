@@ -1,6 +1,6 @@
 # LangGraph Multi-Agent Services
 
-This project will become a small backend service that runs a LangGraph-based multi-agent workflow behind an API.
+This project is a small backend service that runs a LangGraph-based multi-agent workflow behind an API.
 
 ## What This Project Is
 
@@ -66,7 +66,7 @@ We will not write Ollama itself here.
 - this project will call Ollama over HTTP
 - if we later switch providers, the graph should not need a major rewrite
 
-## Planned Runtime Flow
+## Current Runtime Flow
 
 ```mermaid
 flowchart TD
@@ -81,7 +81,29 @@ flowchart TD
     Supervisor --> Final[FinalResponse]
 ```
 
-## Planned Phase 1
+## What Already Exists
+
+The current repository already includes the first end-to-end runtime path:
+
+1. `src/app.py` creates the FastAPI app and attaches the shared router.
+2. `src/api/routes.py` exposes `GET /health` and `POST /runs`.
+3. `src/services/run_service.py` creates the provider and compiled graph for a run.
+4. `src/graph/builder.py` assembles the supervisor and specialist nodes into a LangGraph workflow.
+5. `src/providers/ollama_provider.py` adapts our provider contract to Ollama through LangChain.
+6. `tests/` contains focused smoke tests for the health route, run route, and service orchestration.
+
+That means the architecture is no longer just planned. The request path is now implemented in code, even though local verification still depends on installing dev dependencies and, for full real execution, having Ollama available.
+
+## What Still Needs Setup
+
+Some parts of the project structure exist conceptually but are not finished operationally yet:
+
+- dev dependencies still need to be installed locally before `pytest` can run
+- the project does not yet include Docker files
+- the current graph uses one specialist node and simple deterministic routing
+- long-term memory, RAG, and multi-specialist orchestration are still future phases
+
+## Phase 1 Scope
 
 Phase 1 is intentionally small so the architecture stays understandable.
 
@@ -137,6 +159,11 @@ To keep implementation reviewable, we will build one file at a time in this orde
 
 ## Current Status
 
-The repository is currently at the documentation-first stage.
+The repository now has:
 
-This file defines the big picture so the next implementation steps are easier to follow.
+- Python project metadata and local env templates
+- config, provider, graph, and service layers
+- FastAPI app startup and live route wiring
+- focused API and service smoke tests
+
+The next major step is environment verification: install dependencies, run the tests, and then decide whether to extend the graph or sync the new work to `prod`.
