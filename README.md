@@ -103,6 +103,92 @@ Some parts of the project structure exist conceptually but are not finished oper
 - the current graph uses one specialist node and simple deterministic routing
 - long-term memory, RAG, and multi-specialist orchestration are still future phases
 
+## Local Setup
+
+Use these steps when you want to run the current project locally.
+
+### 1. Create a Virtual Environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+This is a build/setup step, not runtime logic. It creates an isolated Python environment for this repository so installs and test tools do not affect your global Python setup.
+
+### 2. Install Dependencies
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+This installs:
+
+- the application itself in editable mode
+- runtime dependencies such as `fastapi`, `langgraph`, and `langchain-ollama`
+- dev dependencies such as `pytest`, `httpx`, and `ruff`
+
+### 3. Create a Local Env File
+
+```bash
+cp .env.example .env
+```
+
+This is still setup, not runtime execution. The `.env` file is what `src/config.py` reads when the server process starts.
+
+### 4. Start Ollama
+
+Make sure the Ollama app or server is running locally, and make sure the configured model exists.
+
+Example:
+
+```bash
+ollama pull llama3.1
+```
+
+Ollama runs as a separate external service. Our application does not start Ollama itself. At runtime, `src/providers/ollama_provider.py` sends requests to the Ollama HTTP server configured in `.env`.
+
+### 5. Run the API Server
+
+```bash
+.venv/bin/uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
+```
+
+This is the runtime entrypoint:
+
+- `uvicorn` starts the FastAPI server process
+- `src.app:app` loads the application object from `src/app.py`
+- `src/app.py` includes the shared router from `src/api/routes.py`
+- `POST /runs` calls `RunService`, which builds and runs the LangGraph workflow
+
+### 6. Run Focused Tests
+
+```bash
+.venv/bin/python -m pytest tests/test_health.py tests/test_run_flow.py tests/test_run_service.py
+```
+
+These tests verify:
+
+- app startup and `/health`
+- route-to-service wiring for `/runs`
+- service-to-graph/provider orchestration behavior
+
+### 7. Try the API Manually
+
+Health:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Run flow:
+
+```bash
+curl -X POST http://127.0.0.1:8000/runs \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Say hello from LangGraph"}'
+```
+
 ## Phase 1 Scope
 
 Phase 1 is intentionally small so the architecture stays understandable.
