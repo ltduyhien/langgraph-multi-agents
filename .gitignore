@@ -2,6 +2,10 @@
 # We keep `.env.example` tracked, but ignore the real file developers create locally.
 .env
 
+# `PLANNING.MD` is a local backup of longer planning notes.
+# It is kept out of normal version control so the repo-facing docs stay concise.
+PLANNING.MD
+
 # Virtual environment directories are local Python installation artifacts.
 # Ignoring them prevents machine-specific interpreter state from being committed.
 .venv/
